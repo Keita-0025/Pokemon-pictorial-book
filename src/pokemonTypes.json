@@ -7,7 +7,7 @@
   "poison": "どく",
   "electric": "でんき",
   "ground" : "じめん",
-  "fairy": "ようせい",
+  "fairy": "フェアリー",
   "fighting": "かくとう",
   "psychic": "エスパー",
   "rock": "いわ",
@@ -15,5 +15,6 @@
   "dragon": "ドラゴン",
   "ghost": "ゴースト",
   "steel": "はがね",
-  "dark": "あく"
+  "dark": "あく",
+  "flying":"ひこう"
 }

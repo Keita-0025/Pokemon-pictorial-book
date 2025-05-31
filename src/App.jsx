@@ -9,9 +9,7 @@ import pokemonTypeJson from "./pokemonTypes.json";
 function App() {
   const [allPokemons, setAllPokemons] = useState([]);
 
-  const [url, setUrl] = useState(
-    "https://pokeapi.co/api/v2/pokemon?limit=100"
-  );
+  const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon?limit=100");
   const [isLoading, setIsLoading] = useState(false);
 
   const createPokemonObject = (results) => {
@@ -40,11 +38,11 @@ function App() {
         });
     });
   };
-  const translateToJapanese = async (name, type) => {
-    const jpName = await pokemonNameJson.find(
+  const translateToJapanese = (name, type) => {
+    const jpName = pokemonNameJson.find(
       (pokemon) => pokemon.en.toLocaleLowerCase() === name
     ).ja;
-    const jpType = await pokemonTypeJson[type];
+    const jpType = pokemonTypeJson[type];
     console.log(jpType);
     return { name: jpName, type: jpType };
   };
@@ -68,34 +66,36 @@ function App() {
   }, []);
 
   return (
-    <div className="app-container">
+    <>
       <h1>ポケモン図鑑</h1>
       <SearchForm />
       <Button />
-      <div className="pokemon-container">
-        <div className="all-container">
-          {allPokemons.map((pokemon, i) => (
-            <PokemonThumbnails
-              iconItem={pokemon.iconItem}
-              id={pokemon.id}
-              name={pokemon.name}
-              image={pokemon.image}
-              type={pokemon.type}
-              key={i}
-              jpName={pokemon.jpName}
-              jpType={pokemon.jpType}
-            />
-          ))}
+      <div className="app-container flex flex-col items-center justify-center min-height: 100vh py-4 px-2">
+        <div className="pokemon-container flex flex-col items-center justify-center m-auto max-w-full">
+          <div className="flex flex-wrap items-center justify-center">
+            {allPokemons.map((pokemon, i) => (
+              <PokemonThumbnails
+                iconItem={pokemon.iconItem}
+                id={pokemon.id}
+                name={pokemon.name}
+                image={pokemon.image}
+                type={pokemon.type}
+                key={i}
+                jpName={pokemon.jpName}
+                jpType={pokemon.jpType}
+              />
+            ))}
+          </div>
+          {isLoading ? (
+            <div className="load-more">loading naw...</div>
+          ) : (
+            <button className="load-more bg-blue-400" onClick={getAllPokemons}>
+              もっと見る！！
+            </button>
+          )}
         </div>
-        {isLoading ? (
-          <div className="load-more">loading naw...</div>
-        ) : (
-          <button className="load-more" onClick={getAllPokemons}>
-            もっと見る！！
-          </button>
-        )}
       </div>
-    </div>
+    </>
   );
 }
 
