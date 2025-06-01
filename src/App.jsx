@@ -2,15 +2,15 @@ import "./App.css";
 import SearchForm from "./SearchForm";
 import Button from "./Button";
 import PokemonThumbnails from "./PokemonThumbnails";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import pokemonNameJson from "./pokemonNames.json";
 import pokemonTypeJson from "./pokemonTypes.json";
 
 function App() {
   const [allPokemons, setAllPokemons] = useState([]);
-
-  const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon?limit=100");
+  const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon?limit=50");
   const [isLoading, setIsLoading] = useState(false);
+  const fetchedIdsRef = useRef(new Set());
 
   const createPokemonObject = (results) => {
     results.forEach((pokemon) => {
@@ -22,10 +22,14 @@ function App() {
           const _image = data.sprites.other["official-artwork"].front_default;
           const _type = data.types[0].type.name;
           const _iconItem = data.sprites.other.dream_world.front_default;
+          const _id = data.id;
           const jpanese = await translateToJapanese(data.name, _type);
+          if (fetchedIdsRef.current.has(_id)) return;
+
+          fetchedIdsRef.current.add(_id);
           const newList = {
             iconItem: _iconItem,
-            id: data.id,
+            id: _id,
             name: data.name,
             image: _image,
             type: _type,
@@ -64,6 +68,24 @@ function App() {
   useEffect(() => {
     getAllPokemons();
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const widowHeight = window.innerHeight;
+      const fullHeight = document.documentElement.offsetHeight;
+
+      if (scrollTop + widowHeight >= fullHeight - 300 && !isLoading) {
+        getAllPokemons();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isLoading]);
 
   return (
     <>

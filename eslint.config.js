@@ -28,9 +28,8 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
-      "no-undef":"error",
-      "no-unused-vars":"error",
-      "react/props-types":"off"
-    },
-  },
+      "no-undef": "error",
+      "react/props-types": "off"
+    }
+  }
 ]

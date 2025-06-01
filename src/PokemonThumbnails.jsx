@@ -15,7 +15,7 @@ function PokemonThumbnails({
       </div>
       <img src={iconItem} alt={name} className="icon-image border border-gray-400 rounded-full w-20 h-20 bg-neutral-200 duration-200 ease-in absolute -top-3 -left-3 hidden group-hover:block" />
       <img src={image} alt={name} className="w-30 h-30 mt-3"/>
-      <div className="detail-wrapper flex flex-col w-full font-normal">
+      <div className="detail-wrapper flex flex-col w-full">
         <h3 className="m-1">{jpName ?? "???"}</h3>
         <h4 className="m-1">{jpType ?? type}</h4>
       </div>
