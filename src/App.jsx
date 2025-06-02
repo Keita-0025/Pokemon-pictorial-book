@@ -1,91 +1,16 @@
 import "./App.css";
-import SearchForm from "./SearchForm";
-import Button from "./Button";
-import PokemonThumbnails from "./PokemonThumbnails";
-import { useEffect, useState, useRef } from "react";
-import pokemonNameJson from "./pokemonNames.json";
-import pokemonTypeJson from "./pokemonTypes.json";
+import SearchForm from "./components/SearchForm";
+import Button from "./components/Button";
+import PokemonThumbnails from "./components/PokemonThumbnails";
+import usePokemonFetches from "./Hooks/usePokemonFetcher";
+import useScrollLoader from "./Hooks/useScrollLoader";
 
 function App() {
-  const [allPokemons, setAllPokemons] = useState([]);
-  const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon?limit=50");
-  const [isLoading, setIsLoading] = useState(false);
-  const fetchedIdsRef = useRef(new Set());
-
-  const createPokemonObject = (results) => {
-    results.forEach((pokemon) => {
-      const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`;
-      fetch(pokemonUrl)
-        .then((res) => res.json())
-        .then(async (data) => {
-          console.log(data);
-          const _image = data.sprites.other["official-artwork"].front_default;
-          const _type = data.types[0].type.name;
-          const _iconItem = data.sprites.other.dream_world.front_default;
-          const _id = data.id;
-          const jpanese = await translateToJapanese(data.name, _type);
-          if (fetchedIdsRef.current.has(_id)) return;
-
-          fetchedIdsRef.current.add(_id);
-          const newList = {
-            iconItem: _iconItem,
-            id: _id,
-            name: data.name,
-            image: _image,
-            type: _type,
-            jpName: jpanese.name,
-            jpType: jpanese.type,
-          };
-          setAllPokemons((currentList) =>
-            [...currentList, newList].sort((a, b) => a.id - b.id)
-          );
-        });
-    });
-  };
-  const translateToJapanese = (name, type) => {
-    const jpName = pokemonNameJson.find(
-      (pokemon) => pokemon.en.toLocaleLowerCase() === name
-    ).ja;
-    const jpType = pokemonTypeJson[type];
-    console.log(jpType);
-    return { name: jpName, type: jpType };
-  };
-
-  const getAllPokemons = () => {
-    setIsLoading(true);
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        createPokemonObject(data.results);
-        setUrl(data.next);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    getAllPokemons();
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = document.documentElement.scrollTop;
-      const widowHeight = window.innerHeight;
-      const fullHeight = document.documentElement.offsetHeight;
-
-      if (scrollTop + widowHeight >= fullHeight - 300 && !isLoading) {
-        getAllPokemons();
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [isLoading]);
+  const { getAllPokemons, isLoading, allPokemons } = usePokemonFetches(
+    "https://pokeapi.co/api/v2/pokemon?limit=50"
+  );
+  
+  useScrollLoader(isLoading, getAllPokemons)
 
   return (
     <>

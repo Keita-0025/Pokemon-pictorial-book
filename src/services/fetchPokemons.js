@@ -1,0 +1,34 @@
+import translateToJapanese from "../utils/translateToJapanese";
+import fetchJson from "./fetchJson";
+
+
+const createPokemonObject = async (results, fetchedIds) => {
+    const newPokemonObj = results.map(async (pokemon) => {
+        const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`;
+        const data = await fetchJson(pokemonUrl);
+
+        const _image = data.sprites.other["official-artwork"].front_default;
+        const _type = data.types[0].type.name;
+        const _iconItem = data.sprites.other.dream_world.front_default;
+        const _id = data.id;
+        const jpanese = await translateToJapanese(data.name, _type);
+
+        if (fetchedIds.has(_id)) return;
+        fetchedIds.add(_id);
+
+        const newList = {
+            iconItem: _iconItem,
+            id: _id,
+            name: data.name,
+            image: _image,
+            type: _type,
+            jpName: jpanese.name,
+            jpType: jpanese.type,
+        };
+        return newList;
+    });
+    return (await Promise.all(newPokemonObj)).filter(Boolean);
+    
+};
+
+export default createPokemonObject
