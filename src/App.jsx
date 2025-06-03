@@ -1,6 +1,5 @@
 import "./App.css";
 import SearchForm from "./components/SearchForm";
-import Button from "./components/Button";
 import PokemonThumbnails from "./components/PokemonThumbnails";
 import usePokemonFetches from "./Hooks/usePokemonFetcher";
 import useScrollLoader from "./Hooks/useScrollLoader";
@@ -16,7 +15,6 @@ function App() {
     <>
       <h1>ポケモン図鑑</h1>
       <SearchForm />
-      <Button />
       <div className="app-container flex flex-col items-center justify-center min-height: 100vh py-4 px-2">
         <div className="pokemon-container flex flex-col items-center justify-center m-auto max-w-full">
           <div className="flex flex-wrap items-center justify-center">

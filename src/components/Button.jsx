@@ -1,7 +1,7 @@
-function Button () {
+function Button ({isDisabled}) {
     return (
         <div className="button">
-            <button className="bg-gray-600">検索</button>
+            <button disabled={isDisabled} className="bg-gray-600">検索</button>
         </div>
 )
 }
