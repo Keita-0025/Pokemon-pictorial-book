@@ -30,7 +30,7 @@ const usePokemonFetches = (initialUrl) => {
     getAllPokemons();
   }, []);
 
-  return { getAllPokemons, isLoading, allPokemons };
+  return { isLoading, allPokemons };
 };
 
 export default usePokemonFetches;
