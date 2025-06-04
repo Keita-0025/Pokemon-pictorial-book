@@ -1,23 +1,17 @@
-import { useState } from "react";
 import Button from "./Button"
 
-function SearchForm() {
-  const [value, setValue] = useState("");
-  const [isDisabled, setIsDisabled] = useState(true)
+function SearchForm({value, changeVal}) {
+
   const handleChanges = (e) => {
     e.preventDefault()
+    // console.log(e.target.value)
     const inputVal = e.target.value;
-    setValue(inputVal)
-    if(inputVal === "") {
-        setIsDisabled(true)
-    } else {
-        setIsDisabled(false)
-    }
+    changeVal(inputVal)
   }
   return (
     <form action="">
       <input type="text" value={value} onChange={handleChanges} />
-      <Button isDisabled={isDisabled} />
+      <Button value={value} />
     </form>
   );
 }

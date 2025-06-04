@@ -7,7 +7,7 @@ const translateToJapanese = (name, type) => {
         (pokemon) => pokemon.en.toLocaleLowerCase() === name
     )?.ja ?? "不明";
     const jpType = pokemonTypeJson[type];
-    console.log(jpType);
+    console.log(jpName,jpType);
     return { name: jpName, type: jpType };
 };
 

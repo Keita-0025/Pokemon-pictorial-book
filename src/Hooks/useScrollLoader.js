@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const useScrollLoader = (isLoading, getAllPokemons) => {
+const useScrollLoader = (isLoading, handleLoadMore) => {
     useEffect(() => {
         const handleScroll = () => {
             const scrollTop = document.documentElement.scrollTop;
@@ -8,14 +8,14 @@ const useScrollLoader = (isLoading, getAllPokemons) => {
             const fullHeight = document.documentElement.offsetHeight;
 
             if (scrollTop + widowHeight >= fullHeight - 300 && !isLoading) {
-                getAllPokemons();
+                handleLoadMore();
             }
         };
         window.addEventListener("scroll", handleScroll);
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, [isLoading,getAllPokemons]);
+    }, [isLoading,handleLoadMore]);
 };
 
 

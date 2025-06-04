@@ -4,8 +4,9 @@ import fetchJson from "./fetchJson";
 
 const createPokemonObject = async (results, fetchedIds) => {
     const newPokemonObj = results.map(async (pokemon) => {
-        const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`;
+        const pokemonUrl = pokemon.url
         const data = await fetchJson(pokemonUrl);
+        if(!data) return; //nullガード
 
         const _image = data.sprites.other["official-artwork"].front_default;
         const _type = data.types[0].type.name;
