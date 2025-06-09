@@ -12,7 +12,6 @@ const usePokemonFetches = (initialUrl) => {
     setIsLoading(true);
     try {
       const data = await fetchJson(initialUrl);
-      console.log(data);
       const newPokemons = await createPokemonObject(
         data.results,
         fetchedIdsRef.current
@@ -30,6 +29,7 @@ const usePokemonFetches = (initialUrl) => {
     getAllPokemons();
   }, []);
 
+  console.log(allPokemons)
   return { isLoading, allPokemons };
 };
 

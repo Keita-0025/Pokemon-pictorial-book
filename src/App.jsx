@@ -42,10 +42,10 @@ function App() {
                 id={pokemon.id}
                 name={pokemon.name}
                 image={pokemon.image}
-                type={pokemon.type}
+                types={pokemon.types}
                 key={i}
                 jpName={pokemon.jpName}
-                jpType={pokemon.jpType}
+                jpTypes={pokemon.jpTypes}
               />
             ))}
           </div>

@@ -6,13 +6,16 @@ const createPokemonObject = async (results, fetchedIds) => {
     const newPokemonObj = results.map(async (pokemon) => {
         const pokemonUrl = pokemon.url
         const data = await fetchJson(pokemonUrl);
+        console.log(data)
         if(!data) return; //nullガード
 
         const _image = data.sprites.other["official-artwork"].front_default;
-        const _type = data.types[0].type.name;
+        const _type = data.types[0]?.type.name;
+        const _type2 = data.types[1]?.type.name;
+        const types = [_type,_type2].filter(Boolean)
         const _iconItem = data.sprites.other.dream_world.front_default;
         const _id = data.id;
-        const jpanese = await translateToJapanese(data.name, _type);
+        const jpanese = await translateToJapanese(data.name, types);
 
         if (fetchedIds.has(_id)) return;
         fetchedIds.add(_id);
@@ -22,9 +25,9 @@ const createPokemonObject = async (results, fetchedIds) => {
             id: _id,
             name: data.name,
             image: _image,
-            type: _type,
+            types,
             jpName: jpanese.name,
-            jpType: jpanese.type,
+            jpTypes: jpanese.type,
         };
         return newList;
     });
