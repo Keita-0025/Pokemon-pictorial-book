@@ -8,7 +8,19 @@ import useVisiblePokemons from "./Hooks/useVisiblePokemons";
 import { useState } from "react";
 
 function App() {
+  /**
+   * タイプ検索のチェックボックス値
+  */ 
+ const [selectedTypes, setSelectedTypes] = useState([]);
+
+  /**
+   * 名前検索のテキスト
+   */
   const [value, setValue] = useState("");
+  
+  /**
+   * 表示数
+   */
   const [visibleCard, setVisibleCard] = useState(50);
   const { isLoading, allPokemons } = usePokemonFetches(
     "https://pokeapi.co/api/v2/pokemon?limit=99999"
@@ -24,7 +36,8 @@ function App() {
   const pokemonsToShow = useVisiblePokemons({
     allPokemons,
     value,
-    visibleCard
+    visibleCard,
+    selectedTypes
   })
 
   
@@ -32,7 +45,7 @@ function App() {
   return (
     <>
       <h1>ポケモン図鑑</h1>
-      <SearchForm value={value} changeVal={setValue} />
+      <SearchForm value={value} changeVal={setValue} selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes} />
       <div className="app-container flex flex-col items-center justify-center min-height: 100vh py-4 px-2">
         <div className="pokemon-container flex flex-col items-center justify-center m-auto max-w-full">
           <div className="flex flex-wrap items-center justify-center">

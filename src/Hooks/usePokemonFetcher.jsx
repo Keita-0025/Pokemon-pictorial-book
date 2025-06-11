@@ -3,10 +3,21 @@ import fetchJson from "../services/fetchJson";
 import createPokemonObject from "../services/fetchPokemons";
 
 const usePokemonFetches = (initialUrl) => {
+  /**
+   * 全てのポケモン
+   */
   const [allPokemons, setAllPokemons] = useState([]);
+  /**
+   * 読み込み中
+   */
   const [isLoading, setIsLoading] = useState(false);
+  /**
+   * ポケモンのID
+   */
   const fetchedIdsRef = useRef(new Set());
-
+/**
+ * 全てのポケモンを取得する関数
+ */
   const getAllPokemons = async () => {
 
     setIsLoading(true);
@@ -29,7 +40,6 @@ const usePokemonFetches = (initialUrl) => {
     getAllPokemons();
   }, []);
 
-  console.log(allPokemons)
   return { isLoading, allPokemons };
 };
 
