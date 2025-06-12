@@ -1,20 +1,15 @@
-import Button from "./Button"
-import TypeCheckBoxes from "./TypeCheckboxes"
+import Button from "./Button";
+import TypeCheckBoxes from "./TypeCheckboxes";
 
-function SearchForm({value, changeVal, selectedTypes, setSelectedTypes}) {
-
-  const handleChanges = (e) => {
-    e.preventDefault()
-    // console.log(e.target.value)
-    const inputVal = e.target.value;
-    changeVal(inputVal)
-  }
+function SearchForm({ text, handleText, types, handleTypes }) {
   return (
     <form action="">
-      <input type="text" value={value} onChange={handleChanges} />
+      <input type="text" value={text} onChange={handleText} />
       <h2>タイプ検索</h2>
-      <TypeCheckBoxes selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes} />
-      <Button value={value} />
+      <TypeCheckBoxes
+        types={types}
+        handleTypes={handleTypes}
+      />
     </form>
   );
 }

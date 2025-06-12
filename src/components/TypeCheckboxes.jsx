@@ -1,23 +1,15 @@
 import pokemonTypesJson from "../data/pokemonTypes.json";
 
-function TypeCheckBoxes({selectedTypes,setSelectedTypes}) {
+function TypeCheckBoxes({types,handleTypes}) {
+
   
-  const handleType = (e) => {
-    const isChecked = e.target.checked;
-    const value = e.target.value;
-    setSelectedTypes((prev) => 
-        isChecked === true
-        ? [...prev, value]
-        : prev.filter((type) => type !== value)
-    );
-  };
   return (
     <>
-      <h2>{selectedTypes.join('/')}</h2>
+      <h2>{types.join('/')}</h2>
       <div>
         {Object.entries(pokemonTypesJson).map(([key, value]) => (
           <label key={key}>
-            <input type="checkbox" value={key} onChange={handleType} />
+            <input type="checkbox" value={key} onChange={handleTypes} />
             {value}
           </label>
         ))}
