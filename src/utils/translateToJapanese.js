@@ -2,16 +2,31 @@
 import pokemonNameJson from "../data/pokemonNames.json";
 import pokemonTypeJson from "../data/pokemonTypes.json";
 
-const translateToJapanese = (name, types) => {
-    console.log(types);
-    const jpName = pokemonNameJson.find(
-        (pokemon) => pokemon.en.toLocaleLowerCase() === name
-    )?.ja ?? "不明";
-    const pokemonTypes = types.map(type => pokemonTypeJson[type]);
 
-    console.log(jpName,pokemonTypes);
-    return { name: jpName, type: pokemonTypes };
+/**
+ * 名前だけ日本語に変換 
+ * */ 
+const translateNameToJapanese = (name) => {
+  return pokemonNameJson.find(
+    (pokemon) => pokemon.en.toLowerCase() === name.toLowerCase()
+  )?.ja ?? "不明";
+};
+
+/**
+ * タイプ配列を日本語に変換
+ */
+const translateTypesToJapanese = (types) => {
+  return types.map((type) => pokemonTypeJson[type] ?? "不明");
+};
+
+/**
+ * 両方まとめて変換
+ */
+const translateToJapanese = (name, types) => {
+  const jpName = translateNameToJapanese(name);
+  const pokemonTypes = translateTypesToJapanese(types);
+  return { name: jpName, type: pokemonTypes };
 };
 
 
-export default translateToJapanese
+export{translateToJapanese,translateNameToJapanese,translateTypesToJapanese} 

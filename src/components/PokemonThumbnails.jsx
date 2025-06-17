@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 function PokemonThumbnails({
   id,
   name,
@@ -7,10 +9,17 @@ function PokemonThumbnails({
   jpName,
   jpTypes,
 }) {
+
+  const navigate = useNavigate();
+   const handleClick = () => {
+    navigate(`/pokemon/${id}`);// 選択されたポケモンのIDをURLに含めて遷移
+  };
+
   const primaryType = Array.isArray(types) ? types[0] : types;
   return (
     <div
       className={`${primaryType} flex flex-col items-center justify-center py-6 m-1 border border-gray-300 rounded-md w-45 min-w-200px text-center shadow-lg cursor-pointer relative  group duration-200 ease-in hover:scale-115 hover:z-40 `}
+      onClick={handleClick}// サムネイル全体をクリック可能に
     >
       <div className="number rounded-lg bg-gray-300/30 py-1 px-1.5 ">
         <small>No.0{id}</small>

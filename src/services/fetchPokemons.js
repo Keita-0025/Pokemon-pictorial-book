@@ -1,4 +1,4 @@
-import translateToJapanese from "../utils/translateToJapanese";
+import {translateToJapanese} from "../utils/translateToJapanese";
 import fetchJson from "./fetchJson";
 
 
