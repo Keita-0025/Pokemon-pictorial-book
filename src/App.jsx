@@ -4,22 +4,50 @@ import PokemonDetail from "./pages/PokemonDetail";
 import usePokemon from "./Hooks/usePokemons";
 
 function App() {
-
-const {
-        allPokemons,
-        isLoading,
-        types,
-        text,
-        pokemonsToShow,
-        leadMore,
-        handleTypes,
-        handleText
-    }=usePokemon()
+  const {
+    isLoading,
+    types,
+    text,
+    isDetailLoading,
+    pokemonDetail,
+    pokemonSpecies,
+    pokemonsToShow,
+    leadMore,
+    handleTypes,
+    handleText,
+    evolutionChainWithImage,
+    fetchPokemonDetail,
+  } = usePokemon();
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home isLoading={isLoading} types={types} text={text} pokemonsToShow={pokemonsToShow} leadMore={leadMore} handleText = {handleText} handleTypes={handleTypes}/>} />
-        <Route path="/pokemon/:id" element={<PokemonDetail allPokemons={allPokemons} />} />
+        <Route
+          path="/"
+          element={
+            <Home
+              isLoading={isLoading}
+              types={types}
+              text={text}
+              pokemonsToShow={pokemonsToShow}
+              leadMore={leadMore}
+              handleText={handleText}
+              handleTypes={handleTypes}
+            />
+          }
+        />
+
+        <Route
+          path="/pokemon/:id"
+          element={
+            <PokemonDetail
+              isDetailLoading={isDetailLoading}
+              pokemonDetail={pokemonDetail}
+              pokemonSpecies={pokemonSpecies}
+              evolutionChainWithImage={evolutionChainWithImage}
+              fetchPokemonDetail={fetchPokemonDetail}
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

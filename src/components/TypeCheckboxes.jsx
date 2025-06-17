@@ -4,17 +4,15 @@ function TypeCheckBoxes({types,handleTypes}) {
 
   
   return (
-    <>
-      <h2>{types.join('/')}</h2>
+
       <div>
         {Object.entries(pokemonTypesJson).map(([key, value]) => (
           <label key={key}>
-            <input type="checkbox" value={key} onChange={handleTypes} />
+            <input type="checkbox" value={key} onChange={handleTypes} checked={types.includes(key)}  />
             {value}
           </label>
         ))}
       </div>
-    </>
   );
 }
 

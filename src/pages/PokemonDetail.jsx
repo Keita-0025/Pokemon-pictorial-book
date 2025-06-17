@@ -1,90 +1,27 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {
   translateNameToJapanese,
   translateTypesToJapanese,
 } from "../utils/translateToJapanese";
-import fetchJson from "../services/fetchJson";
 
-function PokemonDetail({ allPokemons }) {
+function PokemonDetail({pokemonDetail, pokemonSpecies, evolutionChainWithImage, fetchPokemonDetail, isDetailLoading }) {
   /**
    * URLの :id に対応する値を取得
    */
   const { id } = useParams();
-  /**
-   * ポケモンの基本フェッチデータ
-   */
-  const [pokemonDetail, setPokemonDetail] = useState(null);
-  /**
-   * ポケモンの補足情報フェッチデータ
-   */
-  const [pokemonSpecies, setPokemonSpecies] = useState(null);
-  /**
-   * ポケモンの進化前と進化後フェッチデータ
-   */
-  const [evolutionChain, setEvolutionChain] = useState(null);
-  /**
-   * ポケモン進化の過程（名前・画像）
-   */
-  const [evolutionChainWithImage, setEvolutionChainWithImage] = useState([]);
-  /**
-   * 読み込み中
-   */
-  const [isLoading, setIsLoading] = useState(true);
-
-  /**
-   * クリックされたポケモンの進化前、進化後の名前一覧を返す
-   */
-  function traverseEvolutionChain(chainNode) {
-    const result = [];
-
-    function traverse(node) {
-      result.push(node.species.name);
-      node.evolves_to.forEach(traverse);
-    }
-    traverse(chainNode);
-    return result;
-  }
-
+  
   /**
    * idが変更したときのみAPIに詳細にデータを取得する
    */
   useEffect(() => {
-    setIsLoading(true);
-    fetchJson(`https://pokeapi.co/api/v2/pokemon/${id}`)
-      .then((data) => {
-        setPokemonDetail(data);
-        return fetchJson(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-      })
-      .then((data) => {
-        setPokemonSpecies(data);
-        /**
-         * species データ内の evolution_chain.url を使って正しい進化チェーンを取得
-         */
-        return fetchJson(data.evolution_chain.url);
-      })
-      .then((data) => {
-        setEvolutionChain(data);
-        const names = traverseEvolutionChain(data.chain);
-        /**
-         * 全ポケモン（allPokemons）から、進化前、進化後の名前一覧に格納してある、ポケモンのデータのみフィルターする
-         */
-        const chainData = names
-          .map((name) => allPokemons.find((pokemon) => pokemon.name === name))
-          .filter(Boolean);
-
-        setEvolutionChainWithImage(chainData);
-      })
-      .catch((err) => {
-        console.error("ポケモン詳細取得エラー:", err);
-      })
-      .finally(() => setIsLoading(false));
+    fetchPokemonDetail(id)
   }, [id]);
 
   /**
    * データを読み込み中に表示する
    */
-  if (isLoading) return <p>読み込み中...</p>;
+  if (isDetailLoading) return <p>読み込み中...</p>;
   if (!pokemonDetail || !pokemonSpecies)
     return <p>ポケモンの情報が取得できませんでした。</p>;
 

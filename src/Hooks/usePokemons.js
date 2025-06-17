@@ -1,39 +1,57 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import fetchJson from "../services/fetchJson";
 import createPokemonObject from "../services/fetchPokemons";
-// import useMorePokemons from "./useMorePokemons";
 
 
 
-export const usePokemon = () => {
+
+const usePokemon = () => {
     /**
-   * 全てのポケモン
-   */
+    * 全てのポケモン
+    */
     const [allPokemons, setAllPokemons] = useState([]);
     /**
-     * 読み込み中
-     */
-    const [isLoading, setIsLoading] = useState(false);
-    /**
-     * ポケモンのID
-     */
+    * ポケモンのID
+    */
     const fetchedIdsRef = useRef(new Set());
     /**
     * 表示数
     */
     const [visibleCard, setVisibleCard] = useState(50);
     /**
-    * タイプ検索のチェックボックス値
+    * 名前検索のテキスト
     */
-    const [text, setText] = useState("")
-    /**
-   * 名前検索のテキスト
+   const [text, setText] = useState("")
+   /**
+   * タイプ検索のチェックボックス値
    */
     const [types, setTypes] = useState([])
+    /**
+    * ポケモンの基本フェッチデータ
+    */
+    const [pokemonDetail, setPokemonDetail] = useState(null);
+    /**
+    * ポケモンの補足情報フェッチデータ
+    */
+    const [pokemonSpecies, setPokemonSpecies] = useState(null);
+    /**
+    * ポケモン進化の過程（名前・画像）
+    */
+    const [evolutionChainWithImage, setEvolutionChainWithImage] = useState([]);
+    /**
+    * 一覧読み込み中
+    */
+    const [isInitialLoading, setIsLoading] = useState(true);
+    /**
+    * 詳細読み込み中
+    */
+    const [isDetailLoading, setIsDetailLoading] = useState(false);
+
+
 
     /**
-     * ユーザーの入力値でtext（state）を更新する 
-     */
+    * ユーザーの入力値でtext（state）を更新する 
+    */
     const handleText = (e) => {
         e.preventDefault();
         const inputVal = e.target.value;
@@ -43,8 +61,8 @@ export const usePokemon = () => {
 
 
     /**
-     * チェックボックスにチェックされたタイプをtypes(state)配列に追加する
-     */
+    * チェックボックスにチェックされたタイプをtypes(state)配列に追加する
+    */
     const handleTypes = (e) => {
         const isChecked = e.target.checked;
         const value = e.target.value;
@@ -58,8 +76,8 @@ export const usePokemon = () => {
 
 
     /**
-     * 全てのポケモンを取得
-     */
+    * 全てのポケモンを取得
+    */
     useEffect(() => {
         fetchJson("https://pokeapi.co/api/v2/pokemon?limit=99999")
             .then((data) => {
@@ -85,39 +103,39 @@ export const usePokemon = () => {
 
 
     /**
-     * 追加でポケモンを表示
-     */
+    * 追加でポケモンを表示
+    */
     const leadMore =
         useCallback(() => {
             setVisibleCard(prev => prev + 50);
         }, []);
 
     /**
-     * 検索・絞り込みリセット
-     */
+    * 検索・絞り込みリセット
+    */
     useEffect(() => {
         setVisibleCard(50);
     }, [text, types]);
 
     /**
-     * 無限スクロール
-     */
+    * 無限スクロール
+    */
     useEffect(() => {
         const handleScroll = () => {
             /**
-             * 現在の画面のスクロール位置（ページ一番上）
-             */
+            * 現在の画面のスクロール位置（ページ一番上）
+            */
             const scrollTop = document.documentElement.scrollTop;
             /**
-             * 表示されている画面の高さ（使用デバイスによって変わる）
-             */
+            * 表示されている画面の高さ（使用デバイスによって変わる）
+            */
             const windowHeight = window.innerHeight;
             /**
-             * //ページ全体の高さ
-             */
+            * //ページ全体の高さ
+            */
             const fullHeight = document.documentElement.offsetHeight;
 
-            if (scrollTop + windowHeight >= fullHeight - 300 && !isLoading) {
+            if (scrollTop + windowHeight >= fullHeight - 300 && !isInitialLoading) {
                 leadMore();
                 console.log('calledHandleLoadMore')
             }
@@ -126,36 +144,88 @@ export const usePokemon = () => {
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, [isLoading, leadMore]);
+    }, [isInitialLoading, leadMore]);
 
 
     /**
-     *タイプ・入力値でフィルターし、フィルター後の配列を返す関数
-     */
+    *タイプ・入力値でフィルターし、フィルター後の配列を返す関数
+    */
     const pokemonsToShow = useMemo(() => {
         return allPokemons.filter((pokemon) => {
             /**
-             * 入力されたtextでフィルター
-             */
+            * 入力されたtextでフィルター
+            */
             const textMatch = text.length === 0 || pokemon.jpName.startsWith(text)
             /**
-             * チェックボックスに選ばれたタイプでフィルター
-             */
+            * チェックボックスに選ばれたタイプでフィルター
+            */
             const typeMatch = types.length === 0 || types.every(type => pokemon.types.includes(type));
             return textMatch && typeMatch
         }).slice(0, visibleCard)
     }, [allPokemons, visibleCard, text, types])
 
+    /**
+    * クリックされたポケモンの進化前、進化後の名前一覧を返す
+    */
+    const traverseEvolutionChain = (chainNode) => {
+        const result = [];
+
+        function traverse(node) {
+            result.push(node.species.name);
+            node.evolves_to.forEach(traverse);
+        }
+        traverse(chainNode);
+        return result;
+    }
+
+   /**
+   * idが変更したときのみAPIに詳細にデータを取得する
+   */
+    const fetchPokemonDetail = async (id) => {
+        setIsDetailLoading(true);
+        try {
+            /**
+            * ポケモン基本情報
+            */
+            const detail = await fetchJson(`https://pokeapi.co/api/v2/pokemon/${id}`)
+            setPokemonDetail(detail);
+            /**
+            * ポケモン補足情報
+            */
+            const species = await fetchJson(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+            setPokemonSpecies(species);
+            /**
+            * species データ内の evolution_chain.url を使って正しい進化チェーンを取得
+            */
+            const evolution = await fetchJson(species.evolution_chain.url)
+            const names = traverseEvolutionChain(evolution.chain);
+            /**
+            * 全ポケモン（allPokemons）から、進化前、進化後の名前一覧に格納してある、ポケモンのデータのみフィルターする
+            */
+            const chainData = names
+                .map((name) => allPokemons.find((pokemon) => pokemon.name === name))
+                .filter(Boolean);
+
+            setEvolutionChainWithImage(chainData);
+        } catch (err) {
+            console.error("ポケモン詳細取得エラー:", err);
+        } finally { setIsDetailLoading(false) };
+    };
+
 
     return {
-        allPokemons,
-        isLoading,
+        isInitialLoading,
         types,
         text,
+        isDetailLoading,
+        pokemonDetail,
+        pokemonSpecies,
+        evolutionChainWithImage,
         pokemonsToShow,
         leadMore,
         handleTypes,
-        handleText
+        handleText,
+        fetchPokemonDetail
     }
 }
 
