@@ -5,7 +5,6 @@ const fetchJson = async (url, option, maxRtries = 3, delay = 1000) => {
         try {
             const res = await fetch(url);
             const obj = await res.json()
-            console.log(obj)
             if (!res.ok) {
                 throw new Error(`HPPT error! status:${res.status}`);
             }

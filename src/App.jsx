@@ -5,7 +5,7 @@ import usePokemon from "./Hooks/usePokemons";
 
 function App() {
   const {
-    isLoading,
+    isInitialLoading,
     types,
     text,
     isDetailLoading,
@@ -25,7 +25,7 @@ function App() {
           path="/"
           element={
             <Home
-              isLoading={isLoading}
+              isInitialLoading={isInitialLoading}
               types={types}
               text={text}
               pokemonsToShow={pokemonsToShow}

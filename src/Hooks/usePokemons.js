@@ -41,7 +41,7 @@ const usePokemon = () => {
     /**
     * 一覧読み込み中
     */
-    const [isInitialLoading, setIsLoading] = useState(true);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
     /**
     * 詳細読み込み中
     */
@@ -84,7 +84,6 @@ const usePokemon = () => {
                 if (!data || !data.results) {
                     throw new Error("データが不正です");
                 }
-                console.log("fetchJson response:", data);
                 return createPokemonObject(data.results, fetchedIdsRef.current)
             })
             .then((newPokemons) => {
@@ -96,7 +95,7 @@ const usePokemon = () => {
                 console.error("ポケモンのデータ取得失敗エラー：", error)
             })
             .finally(() => {
-                setIsLoading(false)
+                setIsInitialLoading(false)
             }
             )
     }, [])
@@ -135,9 +134,8 @@ const usePokemon = () => {
             */
             const fullHeight = document.documentElement.offsetHeight;
 
-            if (scrollTop + windowHeight >= fullHeight - 300 && !isInitialLoading) {
+            if (scrollTop + windowHeight >= fullHeight - 1000 && !isInitialLoading) {
                 leadMore();
-                console.log('calledHandleLoadMore')
             }
         };
         window.addEventListener("scroll", handleScroll);
@@ -222,7 +220,6 @@ const usePokemon = () => {
         pokemonSpecies,
         evolutionChainWithImage,
         pokemonsToShow,
-        leadMore,
         handleTypes,
         handleText,
         fetchPokemonDetail

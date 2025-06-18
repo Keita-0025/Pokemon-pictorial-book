@@ -4,7 +4,6 @@ function TypeCheckBoxes({types,handleTypes}) {
 
   
   return (
-
       <div>
         {Object.entries(pokemonTypesJson).map(([key, value]) => (
           <label key={key}>
