@@ -21,10 +21,10 @@ const usePokemon = () => {
     /**
     * 名前検索のテキスト
     */
-   const [text, setText] = useState("")
-   /**
-   * タイプ検索のチェックボックス値
-   */
+    const [text, setText] = useState("")
+    /**
+    * タイプ検索のチェックボックス値
+    */
     const [types, setTypes] = useState([])
     /**
     * ポケモンの基本フェッチデータ
@@ -46,7 +46,10 @@ const usePokemon = () => {
     * 詳細読み込み中
     */
     const [isDetailLoading, setIsDetailLoading] = useState(false);
-
+    /**
+    * ローディングアニメーション用に表示する画像（5つ）を管理する state
+    */
+    const [randomIcons, setRandomIcons] = useState([]);
 
 
     /**
@@ -75,10 +78,10 @@ const usePokemon = () => {
     };
 
 
-    /**
-    * 全てのポケモンを取得
-    */
     useEffect(() => {
+        /**
+        * 全てのポケモンを取得
+        */
         fetchJson("https://pokeapi.co/api/v2/pokemon?limit=99999")
             .then((data) => {
                 if (!data || !data.results) {
@@ -98,6 +101,12 @@ const usePokemon = () => {
                 setIsInitialLoading(false)
             }
             )
+        /**
+        * 初回レンダリング時にのみランダムな5つの画像を選び、stateにセット
+        */  
+        const icons = getRandomIcons(allLoadingIcons);
+        setRandomIcons(icons);
+        
     }, [])
 
 
@@ -162,6 +171,7 @@ const usePokemon = () => {
         }).slice(0, visibleCard)
     }, [allPokemons, visibleCard, text, types])
 
+
     /**
     * クリックされたポケモンの進化前、進化後の名前一覧を返す
     */
@@ -176,9 +186,10 @@ const usePokemon = () => {
         return result;
     }
 
-   /**
-   * idが変更したときのみAPIに詳細にデータを取得する
-   */
+
+    /**
+    * idが変更したときのみAPIに詳細にデータを取得する
+    */
     const fetchPokemonDetail = async (id) => {
         setIsDetailLoading(true);
         try {
@@ -211,6 +222,27 @@ const usePokemon = () => {
     };
 
 
+    /**
+     * assets フォルダ内のすべての loading_icon*.png を取得
+     */
+    const modules = import.meta.glob("../assets/loading_icon*.png", {
+        eager: true,
+    });
+    /**
+     * import.meta.globで取得したモジュールオブジェクトから default（画像URL）だけを取り出す
+     */
+    const allLoadingIcons = Object.values(modules).map((mod) => mod.default);
+    /**
+     * 全てのアイコンから5つのランダムアイコンを取得
+     */
+    const getRandomIcons = (loadingIcon, count = 5) => {
+        const shuffled = [...loadingIcon].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    };
+
+
+
+
     return {
         isInitialLoading,
         types,
@@ -219,6 +251,7 @@ const usePokemon = () => {
         pokemonDetail,
         pokemonSpecies,
         evolutionChainWithImage,
+        randomIcons,
         pokemonsToShow,
         handleTypes,
         handleText,

@@ -17,6 +17,7 @@ function App() {
     handleText,
     evolutionChainWithImage,
     fetchPokemonDetail,
+    randomIcons
   } = usePokemon();
   return (
     <BrowserRouter>
@@ -32,6 +33,7 @@ function App() {
               leadMore={leadMore}
               handleText={handleText}
               handleTypes={handleTypes}
+              randomIcons={randomIcons}
             />
           }
         />
