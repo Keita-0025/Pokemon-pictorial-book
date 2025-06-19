@@ -1,12 +1,50 @@
-# React + Vite
+# プロジェクト名
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+プロジェクトの簡単な説明。  
+簡易的なポケモン図鑑アプリです
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## スクリーンショット
+ホームページ画面
+![ホームページ](./public/ホームページ.png)
 
-## Expanding the ESLint configuration
+---
+ポケモン詳細画面
+![ポケモン詳細ページ](./public/ポケモン詳細ページ.png)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 主な機能
+
+- ポケモン一覧取得
+- ポケモン検索機能（リアルタイム）
+    - 名前（テキスト）
+    - タイプ（混合タイプ含み）
+- レスポンシブ対応
+
+---
+
+## 使用技術
+
+| フロントエンド | 
+|----------------|
+| React  | 
+| Tailwind CSS    |
+
+---
+
+## スタート
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/Keita-0025/Pokemon-pictorial-book.git
+
+# ディレクトリ移動
+cd リポジトリ名
+
+# 依存関係インストール
+npm install
+
+# 開発サーバー起動
+npm run dev

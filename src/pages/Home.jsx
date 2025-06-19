@@ -14,7 +14,7 @@ function Home({
 }) {
   return (
     <>
-      <div className="sticky top-0 z-50 bg-white shadow-md">
+      <div className="sticky top-0 z-50 bg-sky-300 shadow-md py-5">
         <h1>ポケモン図鑑</h1>
         <SearchForm
           text={text}
@@ -28,9 +28,9 @@ function Home({
       {isInitialLoading ? (
         <InitialLoading randomIcons={randomIcons} />
       ) : (
-        <div className="app-container flex flex-col items-center justify-center min-height: 100vh py-4 px-2">
+        <div className="app-container flex flex-col items-center justify-center min-height: 100vh py-4 px-2 bg-sky-100">
           <div className="pokemon-container flex flex-col items-center justify-center m-auto max-w-full">
-            <div className="flex flex-wrap items-center justify-center">
+            <div className="flex flex-wrap items-center pt-5 justify-center">
               {Array.isArray(pokemonsToShow) &&
                 pokemonsToShow.map((pokemon, i) => (
                   <PokemonThumbnails
